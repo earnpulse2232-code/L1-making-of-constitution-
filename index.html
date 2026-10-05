@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#f8fafc">
+    <title>Speed Building Test — Making of Constitution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --green: #10b981;
+            --green-light: #ecfdf5;
+            --red: #ef4444;
+            --red-light: #fef2f2;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100dvh;
+            font-size: 15px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        .hidden { display: none !important; }
+
+        /* MODE SELECTION SCREEN */
+        .start-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-main);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .start-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 36px 28px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .brand-logo-img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            margin: 0 auto 16px;
+            display: block;
+            border-radius: 16px;
+        }
+        .start-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .start-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .mode-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            padding: 16px;
+            background: #fff;
+            border: 1.5px solid var(--border-color);
+            border-radius: 16px;
+            text-align: left;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .mode-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        .mode-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .mode-icon.quiz { background: #dbeafe; color: #2563eb; }
+        .mode-icon.test { background: #d1fae5; color: #059669; }
+        .mode-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+        .mode-info-txt {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .mode-arrow {
+            margin-left: auto;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* MAIN APP */
+        .quiz-app {
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .quiz-header {
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 18px;
+        }
+        .quiz-header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .hdr-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .hdr-logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .hdr-brand-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+        .hdr-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            transition: all 0.15s;
+        }
+        .hdr-btn:hover { background: var(--bg-main); }
+        .hdr-timer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* QUESTIONS CONTAINER */
+        .quiz-main {
+            flex: 1;
+            overflow-y: auto;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+        .q-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .q-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .q-num-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-text {
+            font-size: 17px;
+            line-height: 1.6;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 22px;
+            white-space: pre-line;
+        }
+        .opts {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .opt {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #fff;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .opt:hover:not(.locked) {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+        .opt.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .opt.correct {
+            border-color: var(--green);
+            background: var(--green-light);
+        }
+        .opt.wrong {
+            border-color: var(--red);
+            background: var(--red-light);
+        }
+        .opt.locked { cursor: default; }
+        .opt-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.5px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .opt.selected .opt-letter {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .opt.correct .opt-letter {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+        .opt.wrong .opt-letter {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+        }
+        .opt-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .opt-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        .opt.correct .opt-tag { background: var(--green); color: #fff; }
+        .opt.wrong .opt-tag { background: var(--red); color: #fff; }
+
+        .sol-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+        }
+        .sol-head {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sol-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* BOTTOM NAV */
+        .quiz-nav {
+            flex-shrink: 0;
+            background: #ffffff;
+            border-top: 1px solid var(--border-color);
+            padding: 12px 18px;
+        }
+        .quiz-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+        .nav-btn.prev {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+        .nav-btn.prev:disabled { opacity: 0.4; cursor: not-allowed; }
+        .nav-btn.submit {
+            background: var(--green-light);
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .nav-btn.next {
+            background: var(--primary);
+            color: #ffffff;
+        }
+        .nav-btn.next:hover { background: var(--primary-hover); }
+
+        /* PALETTE MODAL */
+        .palette-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 150;
+            display: none;
+        }
+        .palette-overlay.open { display: block; }
+        .palette-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: min(340px, 85vw);
+            background: #ffffff;
+            z-index: 160;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .palette-drawer.open { transform: translateX(0); }
+        .pal-head {
+            padding: 18px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 17px;
+        }
+        .pal-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            align-content: start;
+        }
+        .pal-btn {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+        .pal-btn:hover { transform: scale(1.05); }
+        .pal-btn.answered { background: var(--green); color: #fff; border-color: var(--green); }
+        .pal-btn.current { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+        /* SUBMIT MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 170;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+        .modal-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .modal-stat {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .modal-stat-num { font-size: 24px; font-weight: 800; color: var(--text-dark); }
+        .modal-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+        .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .modal-btn.confirm { background: var(--primary); color: #fff; }
+        .modal-btn.cancel { background: #f1f5f9; color: var(--text-dark); }
+
+        /* RESULTS SCREEN */
+        .results-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-main);
+            z-index: 180;
+            display: none;
+            overflow-y: auto;
+            padding: 30px 16px 60px;
+        }
+        .results-screen.open { display: block; }
+        .results-box {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .res-hero { text-align: center; margin-bottom: 24px; }
+        .res-hero h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+        .res-score-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        .res-score-val { font-size: 54px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+        .res-score-val span { font-size: 22px; opacity: 0.6; }
+        .res-score-lbl { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.8; }
+        .res-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .res-item {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .res-item-val { font-size: 22px; font-weight: 700; }
+        .res-item-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+        .res-actions { display: flex; flex-direction: column; gap: 10px; }
+        .res-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .res-btn.primary { background: var(--primary); color: #fff; }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-80px);
+            background: #0f172a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.25s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- START / MODE SELECT -->
+    <div class="start-screen" id="startScreen">
+        <div class="start-card">
+            <img src="logo.png" alt="Quiz Logo" class="brand-logo-img" onerror="this.style.display='none'">
+            <h1 class="start-title">Making of Constitution</h1>
+            <p class="start-desc">Speed Building Test — Choose your mode to begin.</p>
+            
+            <button class="mode-btn" onclick="startApp('quiz')">
+                <div class="mode-icon quiz"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <div class="mode-name">Practice Mode</div>
+                    <div class="mode-info-txt">Instant answer & solution after each question.</div>
+                </div>
+                <i class="fas fa-arrow-right mode-arrow"></i>
+            </button>
+
+            <button class="mode-btn" onclick="startApp('test')">
+                <div class="mode-icon test"><i class="fas fa-clock"></i></div>
+                <div>
+                    <div class="mode-name">Exam Mode</div>
+                    <div class="mode-info-txt">Test environment. View complete result at the end.</div>
+                </div>
+                <i class="fas fa-arrow-right mode-arrow"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div class="quiz-app hidden" id="quizApp">
+        <header class="quiz-header">
+            <div class="quiz-header-inner">
+                <button class="hdr-btn" onclick="openPalette()"><i class="fas fa-th-large"></i></button>
+                <div class="hdr-brand">
+                    <img src="logo.png" alt="Logo" class="hdr-logo-img" onerror="this.style.display='none'">
+                    <span class="hdr-brand-title">Polity Quiz</span>
+                </div>
+                <div class="hdr-timer">
+                    <i class="fas fa-stopwatch"></i>
+                    <span id="timerText">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main" id="quizMain"></main>
+
+        <nav class="quiz-nav" id="quizNav">
+            <div class="quiz-nav-inner">
+                <button class="nav-btn prev" id="prevBtn" onclick="prevQuestion()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="nav-btn submit" onclick="openSubmitModal()">
+                    <i class="fas fa-paper-plane"></i> Submit
+                </button>
+                <button class="nav-btn next" id="nextBtn" onclick="nextQuestion()">
+                    <span id="nextLabel">Next</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- QUESTION PALETTE -->
+    <div class="palette-overlay" id="paletteOverlay" onclick="closePalette()"></div>
+    <aside class="palette-drawer" id="paletteDrawer">
+        <div class="pal-head">
+            <span>Questions</span>
+            <button onclick="closePalette()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="pal-grid" id="paletteGrid"></div>
+    </aside>
+
+    <!-- SUBMIT CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal-box">
+            <h3 class="modal-title">Submit Test?</h3>
+            <div class="modal-stats-grid">
+                <div class="modal-stat">
+                    <div class="modal-stat-num" id="modalAttempted" style="color:var(--green)">0</div>
+                    <div class="modal-stat-label">Attempted</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-num" id="modalUnattempted" style="color:var(--text-muted)">0</div>
+                    <div class="modal-stat-label">Unattempted</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn confirm" onclick="confirmSubmit()">Yes, Finish Test</button>
+                <button class="modal-btn cancel" onclick="closeSubmitModal()">Resume Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINAL RESULTS SCREEN -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="results-box" id="resultsInner"></div>
+    </div>
+
+    <div class="toast" id="toast"><i class="fas fa-check"></i><span id="toastText"></span></div>
+
+    <script>
+        const QUESTIONS = [
+            {
+                e: "Who was the President of the Constituent Assembly in the year of 1946?",
+                h: "वर्ष 1946 में संविधान सभा के अध्यक्ष कौन थे?",
+                o: ["B.R. Ambedkar / बी. आर. अम्बेडकर", "Jawaharlal Nehru / जवाहरलाल नेहरू", "Rajendra Prasad / राजेन्द्र प्रसाद", "Sardar Vallabhbhai Patel / सरदार वल्लभभाई पटेल"],
+                a: 2,
+                sE: "Dr. Rajendra Prasad was elected as the permanent President of the Constituent Assembly on 11 December 1946.",
+                sH: "डॉ. राजेन्द्र प्रसाद को 11 दिसंबर 1946 को संविधान सभा का स्थायी अध्यक्ष चुना गया था।"
+            },
+            {
+                e: "Who is regarded as the chief architect and Chairman of the Drafting Committee of the Indian Constitution?",
+                h: "भारतीय संविधान की प्रारूप समिति के मुख्य वास्तुकार और अध्यक्ष किसे माना जाता है?",
+                o: ["Jawaharlal Nehru / जवाहरलाल नेहरू", "Dr. B.R. Ambedkar / डॉ. बी.आर. अम्बेडकर", "Rajendra Prasad / राजेन्द्र प्रसाद", "Sardar Patel / सरदार पटेल"],
+                a: 1,
+                sE: "Dr. B.R. Ambedkar was the Chairman of the Drafting Committee and is known as the Chief Architect of the Indian Constitution.",
+                sH: "डॉ. बी.आर. अम्बेडकर प्रारूप समिति के अध्यक्ष थे और उन्हें भारतीय संविधान का मुख्य वास्तुकार माना जाता है।"
+            },
+            {
+                e: "Who among the following was the advisor to the Constituent Assembly?",
+                h: "निम्नलिखित में से कौन संविधान सभा का सलाहकार था?",
+                o: ["B. N. Rau / बी. एन. राव", "B. R. Ambedkar / बी. आर. अंबेडकर", "Pattabhi Sitaramayya / पट्टाभि सीतारमैया", "Alladi Krishnaswamy / अल्लादी कृष्णस्वामी"],
+                a: 0,
+                sE: "Sir B.N. Rau was appointed as the Constitutional Advisor to the Constituent Assembly.",
+                sH: "सर बी.एन. राव को संविधान सभा का संवैधानिक सलाहकार नियुक्त किया गया था।"
+            },
+            {
+                e: "Who among the following stated in the Constituent Assembly that on 26th January 1950, India was going to enter a life of contradictions?",
+                h: "निम्नलिखित में से किसने संविधान सभा में कहा था कि 26 जनवरी, 1950 को भारत विरोधाभासों के जीवन में प्रवेश करने वाला था?",
+                o: ["Dr. B. R. Ambedkar / डॉ. बी. आर. अम्बेडकर", "Jawaharlal Nehru / जवाहर लाल नेहरू", "Mahatma Gandhi / महात्मा गांधी", "S. P. Mukherjee / एस. पी. मुखर्जी"],
+                a: 0,
+                sE: "Dr. B.R. Ambedkar made this statement in his final speech in the Constituent Assembly.",
+                sH: "डॉ. बी.आर. अम्बेडकर ने संविधान सभा में अपने अंतिम भाषण में यह प्रसिद्ध वक्तव्य दिया था।"
+            },
+            {
+                e: "Which of the following statements about Alladi Krishnaswami Ayyar, as a drafting member of the Constitution of India, are correct?\n1. He favoured the role of the Supreme Court in taking important decisions related to the interpretation of the Constitution.\n2. He felt that the Supreme Court had to draw the line between liberty and social control.\n3. He believed in the dominance of the executive over the judiciary.\n4. He favoured a dictatorial form of governance.",
+                h: "भारत के संविधान के आलेखन (प्रारूपण) सदस्य के रूप में, अल्लादि कृष्णास्वामी अय्यर के बारे में निम्नलिखित में से कौन-से कथन सही हैं?\n1. भारत के संविधान के निर्वचन से संबंधित महत्वपूर्ण निर्णयों के लिए जाने में उच्चतम न्यायालय की भूमिका के वे पक्षधर थे।\n2. उनका यह मानना था कि स्वतंत्रता और सामाजिक निग्रह के बीच उच्चतम न्यायालय को एक रेखा खींचनी पड़ेगी।\n3. न्यायपालिका पर कार्यपालिका के प्रभुत्व में उनका विश्वास था।\n4. वे शासन के एक अधिनायकीय स्वरूप के पक्षधर थे।",
+                o: ["1 and 2 only / केवल 1 और 2", "1, 2 and 3 / 1, 2, और 3", "3 and 4 / 3 और 4", "1, 2 and 4 / 1, 2 और 4"],
+                a: 0,
+                sE: "Statements 1 and 2 are correct. He was an advocate of judicial independence and constitutional interpretation.",
+                sH: "कथन 1 और 2 सही हैं। वे न्यायपालिका की स्वतंत्रता और संवैधानिक व्याख्या के समर्थक थे।"
+            },
+            {
+                e: "Which of the following statements relating to the historic Objectives Resolution, adopted by the Constituent Assembly, is/are correct?\n1. Inspired the shaping of Constitution through subsequent stages.\n2. It was a declaration, a firm resolve and a pledge.\n3. It provided the underlying philosophy of our Constitution.",
+                h: "ऐतिहासिक उद्देश्य प्रस्ताव से संबंधित संविधान सभा द्वारा अपनाया गया निम्नलिखित में कौन सा कथन सत्य है/हैं?\n1. उद्देश्य प्रस्ताव ने संविधान को उसके अगले सभी चरणों के माध्यम से इसे आकार देने के लिए प्रेरित किया है।\n2. यह केवल एक संकल्प नहीं, बल्कि एक घोषणा, एक दृढ़ संकल्प और प्रतिज्ञा थी।\n3. यह हमारे संविधान को अंतर्निहित दर्शन प्रदान करता है।",
+                o: ["1 and 2 only / केवल 1 और 2", "1 only / केवल 1", "1, 2 and 3 / 1, 2 और 3", "2 and 3 only / केवल 2 और 3"],
+                a: 2,
+                sE: "All 3 statements are correct regarding the Objectives Resolution moved by Jawaharlal Nehru.",
+                sH: "जवाहरलाल नेहरू द्वारा पेश किए गए उद्देश्य प्रस्ताव के संबंध में तीनों कथन सत्य हैं।"
+            },
+            {
+                e: "Which of the following statements regarding the Constituent Assembly of India is/are correct?\n1. Assembly was elected indirectly by members of Provincial Legislative Assemblies.\n2. Elections held on basis of Universal Adult Franchise.\n3. Scheme of election laid down by Cabinet Delegation.\n4. Distribution of seats done on basis of Mountbatten Plan.",
+                h: "भारत की संविधान सभा के बारे में निम्नलिखित में से कौन सा/से कथन सही है/हैं?\n1. प्रांतीय विधानसभाओं के सदस्यों द्वारा अप्रत्यक्ष रूप से सभा का चयन किया गया था।\n2. सार्वभौमिक वयस्क मताधिकार के आधार पर चुनाव किए गए थे।\n3. चुनाव की स्कीम का निर्धारण कैबिनेट डेलिगेशन द्वारा किया गया था।\n4. सीटों का वर्गीकरण माउंटबेटन योजना के आधार पर किया गया था।",
+                o: ["1 only / केवल 1", "1, 2 and 3 / 1, 2 और 3", "1 and 3 only / केवल 1 और 3", "2 and 4 / 2 और 4"],
+                a: 2,
+                sE: "Statements 1 and 3 are correct. Elections were indirect and based on Cabinet Mission Scheme.",
+                sH: "कथन 1 और 3 सही हैं। चुनाव अप्रत्यक्ष थे तथा कैबिनेट मिशन योजना पर आधारित थे।"
+            },
+            {
+                e: "On 26th November 1949, which of the following provisions of the Constitution of India came into effect?\n1. Citizenship\n2. Elections\n3. Provisional Parliament\n4. Fundamental Rights",
+                h: "26 नवम्बर, 1949 को भारत के संविधान के निम्नलिखित में से कौन से प्रावधान लागू हुए?\n1. नागरिकता\n2. निर्वाचन\n3. अस्थायी संसद\n4. मौलिक अधिकार",
+                o: ["2, 3 and 4 / 2, 3 और 4", "1, 2 and 3 / 1, 2 और 3", "1 and 3 only / केवल 1 और 3", "1 and 2 only / केवल 1 और 2"],
+                a: 1,
+                sE: "Provisions relating to Citizenship, Elections, and Provisional Parliament came into force on 26 Nov 1949.",
+                sH: "नागरिकता, निर्वाचन और अस्थायी संसद से जुड़े प्रावधान 26 नवंबर 1949 को ही लागू हो गए थे।"
+            },
+            {
+                e: "Who among the following played a critical role in drafting India's Constitution, was a social reformer, and is celebrated for his work toward the upliftment of Dalits?",
+                h: "निम्नलिखित में से किसने भारत के संविधान के निर्माण में महत्वपूर्ण भूमिका निभाई, वे एक समाज सुधारक थे, और दलितों के उत्थान हेतु उनके कार्य का व्यापक स्मरण किया जाता है?",
+                o: ["Mahatma Gandhi / महात्मा गांधी", "Rajendra Prasad / राजेन्द्र प्रसाद", "B.R. Ambedkar / बी. आर. अंबेडकर", "Sardar Vallabhbhai Patel / सरदार वल्लभभाई पटेल"],
+                a: 2,
+                sE: "Dr. B.R. Ambedkar played this monumental role.",
+                sH: "डॉ. बी.आर. अम्बेडकर ने यह महत्वपूर्ण भूमिका निभाई।"
+            },
+            {
+                e: "Republic Day in India is celebrated to commemorate:",
+                h: "भारत में गणतंत्र दिवस निम्नलिखित के उपलक्ष्य में मनाया जाता है:",
+                o: [
+                    "India's independence / भारत की आजादी",
+                    "the day when Constituent Assembly was formed / वह दिन जब संविधान सभा का गठन हुआ",
+                    "the date on which the Constitution came into effect / वह तारीख जिस दिन भारत का संविधान लागू हुआ",
+                    "the day when first meeting was held / वह दिन जब संविधान सभा की पहली बैठक हुई"
+                ],
+                a: 2,
+                sE: "Republic Day marks the date on which the Constitution came into full effect on 26 January 1950.",
+                sH: "26 जनवरी 1950 को संविधान के पूर्ण रूप से लागू होने के उपलक्ष्य में गणतंत्र दिवस मनाया जाता है।"
+            },
+            {
+                e: "Who among the following is called 'father of Indian constitution'?",
+                h: "निम्नलिखित में से किसे 'भारतीय संविधान का जनक' कहा जाता है?",
+                o: ["Bhim Rao Ambedkar / भीमराव अंबेडकर", "P Subbarayan / पी सुब्बारायन", "Gopinath Bordoloi / गोपीनाथ बोरदोलोई", "Rajendra Prasad / राजेंद्र प्रसाद"],
+                a: 0,
+                sE: "Dr. Bhim Rao Ambedkar is widely recognized as the Father of the Indian Constitution.",
+                sH: "डॉ. भीमराव अंबेडकर को भारतीय संविधान का जनक कहा जाता है।"
+            },
+            {
+                e: "Who was the first and temporary president of the Constitutional Assembly formed to draft the Constitution of India?",
+                h: "भारत के संविधान का मसौदा तैयार करने के लिए गठित संविधान सभा के पहले और अस्थायी अध्यक्ष कौन थे?",
+                o: ["B N Rau / बी एन राऊ", "BR Ambedkar / बीआर अंबेडकर", "Dr. Sachchidananda Sinha / डॉ. सच्चिदानंद सिन्हा", "HVR Iyengar / एच.वी.आर. आयंगर"],
+                a: 2,
+                sE: "Dr. Sachchidananda Sinha was elected as the temporary President on 9 December 1946.",
+                sH: "डॉ. सच्चिदानंद सिन्हा को 9 दिसंबर 1946 को संविधान सभा का अस्थायी अध्यक्ष चुना गया था।"
+            },
+            {
+                e: "How many members initially constituted the Indian Constituent Assembly formed to draft the Constitution before membership reduced after partition?",
+                h: "संविधान का मसौदा तैयार करने के लिए गठित भारतीय संविधान सभा में प्रारंभ में कितने सदस्य शामिल थे, जिनकी सदस्यता विभाजन के बाद कम हो गई?",
+                o: ["389", "390", "391", "392"],
+                a: 0,
+                sE: "Initially, the total strength of the Constituent Assembly was 389.",
+                sH: "प्रारंभ में संविधान सभा की कुल सदस्य संख्या 389 निर्धारित थी।"
+            },
+            {
+                e: "On which date did the Constituent Assembly formally give its final approval to the Constitution of India before it came into full effect on 26 January 1950?",
+                h: "किस तारीख को संविधान सभा ने भारत के संविधान को औपचारिक रूप से अपनी अंतिम स्वीकृति दी, इससे पहले कि यह 26 जनवरी 1950 को पूर्ण रूप से लागू हुआ था?",
+                o: ["26th Dec 1949 / 26 दिसंबर 1949", "26th Dec 1950 / 26 दिसंबर 1950", "26th Jan 1949 / 26 जनवरी 1949", "26th Nov 1949 / 26 नवंबर 1949"],
+                a: 3,
+                sE: "The Constitution was formally adopted and approved on 26 November 1949.",
+                sH: "संविधान को औपचारिक रूप से 26 नवंबर 1949 को अपनाया और अंगीकृत किया गया।"
+            },
+            {
+                e: "Who among the following was the chairman of Steering Committee in constituent assembly?",
+                h: "निम्नलिखित में से संविधान सभा की स्टीयरिंग समिति के अध्यक्ष कौन हैं?",
+                o: ["Pt. Jawaharlal Nehru / पंडित जवाहरलाल नेहरू", "Sardar Vallabhbhai Patel / सरदार वल्लभभाई पटेल", "K.M Munshi / केएम मुंशी", "Dr. Rajendra Prasad / डॉ. राजेन्द्र प्रसाद"],
+                a: 3,
+                sE: "Dr. Rajendra Prasad was the Chairman of the Steering Committee.",
+                sH: "डॉ. राजेन्द्र प्रसाद स्टीयरिंग (संचालन) समिति के अध्यक्ष थे।"
+            },
+            {
+                e: "In which year did the Indian Constitution come into effect?",
+                h: "भारतीय संविधान किस वर्ष लागू हुआ था?",
+                o: ["1947", "1950", "1949", "1952"],
+                a: 1,
+                sE: "The Constitution of India came into full effect on 26 January 1950.",
+                sH: "भारतीय संविधान 26 जनवरी 1950 को पूर्ण रूप से लागू हुआ।"
+            },
+            {
+                e: "In which year did the members of the Indian Constituent Assembly first meet to draft a constitution for the country?",
+                h: "भारतीय संविधान सभा के सदस्य देश के लिए संविधान का मसौदा तैयार करने हेतु पहली बार किस वर्ष मिले थे?",
+                o: ["1946", "1948", "1947", "1949"],
+                a: 0,
+                sE: "The first meeting took place on 9 December 1946.",
+                sH: "पहली बैठक 9 दिसंबर 1946 को आयोजित हुई थी।"
+            },
+            {
+                e: "The original Constitution contained 395 Articles divided into ________ parts.",
+                h: "मूल संविधान में 395 अनुच्छेद थे जो ________ भागों में विभाजित थे।",
+                o: ["22", "19", "21", "24"],
+                a: 0,
+                sE: "The original Constitution had 395 Articles divided into 22 Parts and 8 Schedules.",
+                sH: "मूल संविधान में 395 अनुच्छेद, 22 भाग और 8 अनुसूचियां थीं।"
+            },
+            {
+                e: "When was the fifth session of the Constituent Assembly held?",
+                h: "संविधान सभा का पाँचवां सत्र कब आयोजित किया गया था?",
+                o: ["27–30 January 1948 / 27-30 जनवरी 1948", "14-30 August 1947 / 14-30 अगस्त 1947", "9-23 December 1946 / 9-23 दिसंबर 1946", "14-31 July 1947 / 14-31 जुलाई 1947"],
+                a: 1,
+                sE: "The Fifth Session of the Constituent Assembly was held from 14 to 30 August 1947.",
+                sH: "संविधान सभा का 5वां सत्र 14 से 30 अगस्त 1947 के दौरान हुआ था।"
+            },
+            {
+                e: "When was the Objectives Resolution unanimously adopted by the Constituent Assembly?",
+                h: "संविधान सभा द्वारा सर्वसम्मति से उद्देश्य संकल्प को कब अंगीकृत किया गया था?",
+                o: ["15 August 1949 / 15 अगस्त 1949", "22 January 1947 / 22 जनवरी 1947", "31 August 1950 / 31 अगस्त 1950", "26 January 1948 / 26 जनवरी 1948"],
+                a: 1,
+                sE: "The Objectives Resolution was unanimously adopted on 22 January 1947.",
+                sH: "उद्देश्य प्रस्ताव को 22 जनवरी 1947 को सर्वसम्मति से स्वीकार किया गया था।"
+            },
+            {
+                e: "Gopinath Bordoloi, who was a part of the Constituent Assembly, belonged to which state?",
+                h: "गोपीनाथ बोरदोलोई, जो संविधान सभा का हिस्सा थे, किस राज्य से संबंधित थे?",
+                o: ["Gujarat / गुजरात", "Assam / असम", "Kerala / केरल", "Andhra Pradesh / आंध्र प्रदेश"],
+                a: 1,
+                sE: "Gopinath Bordoloi was from Assam and became its first Chief Minister.",
+                sH: "गोपीनाथ बोरदोलोई असम से संबंधित थे और वे असम के पहले मुख्यमंत्री बने।"
+            },
+            {
+                e: "Who among the following was the Chairman of the Central Constitution Committee (Union Constitution Committee)?",
+                h: "केंद्रीय संविधान समिति (Union Constitution Committee) के अध्यक्ष निम्नलिखित में से कौन थे?",
+                o: ["Rajendra Prasad / राजेन्द्र प्रसाद", "Jawaharlal Nehru / जवाहरलाल नेहरू", "Vallabhbhai Patel / वल्लभभाई पटेल", "B.P. Sitaramayya / बी.पी. सीतारमैया"],
+                a: 1,
+                sE: "Jawaharlal Nehru was the Chairman of the Union Constitution Committee.",
+                sH: "जवाहरलाल नेहरू केंद्रीय संविधान समिति (संघ संविधान समिति) के अध्यक्ष थे।"
+            },
+            {
+                e: "Who among the following was the Chairman of the Sub-Committee on Fundamental Rights in the Constituent Assembly of India?",
+                h: "निम्नलिखित में से कौन भारत की संविधान सभा में मौलिक अधिकारों की उपसमिति के अध्यक्ष थे?",
+                o: ["J.B. Kripalani / जे.बी. कृपलानी", "K. M. Munshi / के. एम. मुंशी", "Abul Kalam Azad / अबुल कलाम आज़ाद", "Vallabhbhai Patel / वल्लभभाई पटेल"],
+                a: 0,
+                sE: "J.B. Kripalani headed the Fundamental Rights Sub-Committee.",
+                sH: "जे.बी. कृपलानी मौलिक अधिकार उप-समिति के अध्यक्ष थे।"
+            },
+            {
+                e: "The Objective Resolution in the Constituent Assembly was moved by:",
+                h: "संविधान सभा में उद्देश्य प्रस्ताव किसके द्वारा पेश किया गया था:",
+                o: ["Dr. BR Ambedkar / डॉ. बी. आर. अम्बेडकर", "Jawaharlal Nehru / जवाहरलाल नेहरू", "Dr. Rajendra Prasad / डॉ. राजेन्द्र प्रसाद", "Sardar Vallabhbhai Patel / सरदार वल्लभभाई पटेल"],
+                a: 1,
+                sE: "Jawaharlal Nehru moved the historic Objective Resolution on 13 December 1946.",
+                sH: "जवाहरलाल नेहरू ने 13 दिसंबर 1946 को उद्देश्य प्रस्ताव पेश किया था।"
+            },
+            {
+                e: "How many years did Constitutional Assembly approximately take to draft the Constitution?",
+                h: "संविधान सभा को संविधान का मसौदा तैयार करने में लगभग कितने वर्ष लगे?",
+                o: ["Three / तीन", "Five / पांच", "Two / दो", "One / एक"],
+                a: 0,
+                sE: "The Assembly took 2 years, 11 months and 18 days (approx 3 years) to complete the drafting.",
+                sH: "संविधान निर्माण में कुल 2 वर्ष, 11 महीने और 18 दिन (लगभग 3 वर्ष) का समय लगा था।"
+            },
+            {
+                e: "After the Constitution of India came into force in 1950 the Constituent Assembly ceased to exist, transforming itself into the ______ till 1952.",
+                h: "1950 में भारत का संविधान लागू होने के बाद संविधान सभा का अस्तित्व समाप्त हो गया, जो 1952 तक के लिए ______ में बदल गई।",
+                o: [
+                    "Supreme Court of India / भारत का सर्वोच्च न्यायालय",
+                    "Finance Commission of India / भारत का वित्त आयोग",
+                    "Provisional Parliament of India / भारत की अंतरिम संसद",
+                    "Election Commission of India / भारत चुनाव आयोग"
+                ],
+                a: 2,
+                sE: "The Constituent Assembly transformed into the Provisional Parliament of India until first general elections.",
+                sH: "संविधान सभा 1952 में पहले आम चुनाव होने तक भारत की अंतरिम (अनंतिम) संसद के रूप में कार्य करती रही।"
+            },
+            {
+                e: "In which year did the Constituent Assembly set up a Drafting Committee under the Chairmanship of Dr. BR Ambedkar to prepare a Draft Constitution for India?",
+                h: "किस वर्ष संविधान सभा ने भारत के लिए एक प्रारूप संविधान तैयार करने के लिए डॉ. बी आर अंबेडकर की अध्यक्षता में एक प्रारूप समिति का गठन किया था?",
+                o: ["1948", "1946", "1949", "1947"],
+                a: 3,
+                sE: "The Drafting Committee was set up on 29 August 1947.",
+                sH: "प्रारूप समिति का गठन 29 अगस्त 1947 को किया गया था।"
+            },
+            {
+                e: "Who among the following was appointed as the first Law Minister of Independent India in 1947?",
+                h: "निम्नलिखित में से किसे 1947 में स्वतंत्र भारत के पहले कानून मंत्री के रूप में नियुक्त किया गया था?",
+                o: ["Dr. BR Ambedkar / डॉ. बी आर अम्बेडकर", "Lokmanya Tilak / लोकमान्य तिलक", "Sardar Vallabhbhai Patel / सरदार वल्लभभाई पटेल", "Lal Bahadur Shastri / लाल बहादुर शास्त्री"],
+                a: 0,
+                sE: "Dr. B.R. Ambedkar was independent India's first Minister of Law and Justice.",
+                sH: "डॉ. बी.आर. अम्बेडकर स्वतंत्र भारत के पहले विधि एवं कानून मंत्री बने थे।"
+            },
+            {
+                e: "Who among the following was the Secretary of the Constituent Assembly?",
+                h: "निम्नलिखित में से कौन संविधान सभा के सचिव थे?",
+                o: ["Hussain Imam / हुसैन इमाम", "Dr. Rajendra Prasad / डॉ. राजेन्द्र प्रसाद", "HVR Iyengar / एचवीआर अयंगर", "HC Mookherjee / एचसी मुखर्जी"],
+                a: 2,
+                sE: "H.V.R. Iyengar was the Secretary to the Constituent Assembly.",
+                sH: "एच.वी.आर. अयंगर संविधान सभा के सचिव (Secretary) थे।"
+            },
+            {
+                e: "How many committees were set up by the Constituent Assembly for framing the Constitution?",
+                h: "संविधान सभा द्वारा संविधान के निर्माण के लिए कितनी समितियां बनाई गई थीं?",
+                o: ["22", "9", "11", "20"],
+                a: 0,
+                sE: "The Constituent Assembly appointed a total of 22 major and minor committees.",
+                sH: "संविधान सभा ने संविधान निर्माण के विभिन्न कार्यों के लिए कुल 22 समितियां गठित की थीं।"
+            }
+        ];
+
+        const state = {
+            current: 0,
+            answers: new Array(QUESTIONS.length).fill(null),
+            locked: new Array(QUESTIONS.length).fill(false),
+            visited: new Array(QUESTIONS.length).fill(false),
+            lang: 'en',
+            mode: 'test',
+            startTime: null,
+            timerInterval: null,
+            elapsed: 0
+        };
+
+        function $(id) { return document.getElementById(id); }
+        function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+        function toast(msg) {
+            const t = $('toast');
+            $('toastText').textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60);
+            return String(m).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+        }
+
+        function startApp(mode) {
+            state.mode = mode;
+            $('startScreen').classList.add('hidden');
+            $('quizApp').classList.remove('hidden');
+            state.startTime = Date.now();
+            state.visited[0] = true;
+            state.timerInterval = setInterval(() => {
+                state.elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+                $('timerText').textContent = formatTime(state.elapsed);
+            }, 1000);
+            renderQuestion();
+            buildPalette();
+        }
+
+        function renderQuestion() {
+            const i = state.current;
+            const q = QUESTIONS[i];
+            const qText = state.lang === 'en' ? q.e : q.h;
+            const isQuiz = state.mode === 'quiz';
+            const locked = state.locked[i];
+            const userAns = state.answers[i];
+
+            let optsHtml = '';
+            q.o.forEach((opt, idx) => {
+                let cls = '';
+                let tag = '';
+                if (isQuiz && locked) {
+                    if (idx === q.a) { cls = 'correct'; tag = '<span class="opt-tag">Correct</span>'; }
+                    if (userAns === idx && idx !== q.a) { cls = 'wrong'; tag = '<span class="opt-tag">Your Ans</span>'; }
+                } else if (userAns === idx) {
+                    cls = 'selected';
+                }
+                optsHtml += `
+                    <div class="opt ${cls} ${locked ? 'locked' : ''}" onclick="selectOption(${idx})">
+                        <div class="opt-letter">${String.fromCharCode(65 + idx)}</div>
+                        <div class="opt-text">${esc(opt)}</div>
+                        ${tag}
+                    </div>
+                `;
+            });
+
+            let solHtml = '';
+            if (isQuiz && locked) {
+                solHtml = `
+                    <div class="sol-box">
+                        <div class="sol-head"><i class="fas fa-lightbulb"></i> Solution</div>
+                        <div class="sol-content">${state.lang === 'en' ? q.sE : q.sH}</div>
+                    </div>
+                `;
+            }
+
+            $('quizMain').innerHTML = `
+                <div class="q-card">
+                    <div class="q-top">
+                        <div class="q-num-badge"><i class="fas fa-hashtag"></i> Question ${i + 1} of ${QUESTIONS.length}</div>
+                        <button class="lang-btn" onclick="toggleLang()"><i class="fas fa-language"></i> ${state.lang === 'en' ? 'हिन्दी' : 'English'}</button>
+                    </div>
+                    <div class="q-text">${esc(qText)}</div>
+                    <div class="opts">${optsHtml}</div>
+                    ${solHtml}
+                </div>
+            `;
+
+            $('prevBtn').disabled = i === 0;
+            $('nextLabel').textContent = i === QUESTIONS.length - 1 ? 'Finish' : 'Next';
+            updatePaletteGrid();
+        }
+
+        function selectOption(idx) {
+            const i = state.current;
+            if (state.mode === 'quiz' && state.locked[i]) return;
+
+            state.answers[i] = idx;
+            if (state.mode === 'quiz') {
+                state.locked[i] = true;
+                if (idx === QUESTIONS[i].a) toast('Correct! 🎉');
+                else toast('Incorrect');
+            }
+            renderQuestion();
+        }
+
+        function toggleLang() {
+            state.lang = state.lang === 'en' ? 'hi' : 'en';
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            if (state.current > 0) {
+                state.current--;
+                state.visited[state.current] = true;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (state.current < QUESTIONS.length - 1) {
+                state.current++;
+                state.visited[state.current] = true;
+                renderQuestion();
+            } else {
+                openSubmitModal();
+            }
+        }
+
+        function buildPalette() {
+            const grid = $('paletteGrid');
+            grid.innerHTML = '';
+            QUESTIONS.forEach((_, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.id = 'pal-' + i;
+                btn.textContent = i + 1;
+                btn.onclick = () => {
+                    state.current = i;
+                    state.visited[i] = true;
+                    closePalette();
+                    renderQuestion();
+                };
+                grid.appendChild(btn);
+            });
+            updatePaletteGrid();
+        }
+
+        function updatePaletteGrid() {
+            QUESTIONS.forEach((_, i) => {
+                const btn = $('pal-' + i);
+                if (!btn) return;
+                btn.className = 'pal-btn';
+                if (i === state.current) btn.classList.add('current');
+                if (state.answers[i] !== null) btn.classList.add('answered');
+            });
+        }
+
+        function openPalette() {
+            $('paletteDrawer').classList.add('open');$('paletteOverlay').classList.add('open');
+        }
+        function closePalette() {
+            $('paletteDrawer').classList.remove('open');$('paletteOverlay').classList.remove('open');
+        }
+
+        function openSubmitModal() {
+            const ans = state.answers.filter(a => a !== null).length;
+            $('modalAttempted').textContent = ans;
+            $('modalUnattempted').textContent = QUESTIONS.length - ans;
+            $('submitModal').classList.add('open');
+        }
+        function closeSubmitModal() {
+            $('submitModal').classList.remove('open');
+        }
+
+        function confirmSubmit() {
+            closeSubmitModal();
+            if (state.timerInterval) clearInterval(state.timerInterval);
+
+            let correct = 0, wrong = 0;
+            state.answers.forEach((ans, i) => {
+                if (ans !== null) {
+                    if (ans === QUESTIONS[i].a) correct++;
+                    else wrong++;
+                }
+            });
+
+            const attempted = correct + wrong;
+            const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+
+            $('resultsInner').innerHTML = `
+                <div class="res-hero">
+                    <h2>Test Completed!</h2>
+                    <p style="color:var(--text-muted);font-size:14px;">Total Time: ${formatTime(state.elapsed)}</p>
+                </div>
+                <div class="res-score-card">
+                    <div class="res-score-val">${correct} <span>/ ${QUESTIONS.length}</span></div>
+                    <div class="res-score-lbl">Total Score</div>
+                </div>
+                <div class="res-grid">
+                    <div class="res-item">
+                        <div class="res-item-val" style="color:var(--green)">${correct}</div>
+                        <div class="res-item-lbl">Correct</div>
+                    </div>
+                    <div class="res-item">
+                        <div class="res-item-val" style="color:var(--red)">${wrong}</div>
+                        <div class="res-item-lbl">Wrong</div>
+                    </div>
+                    <div class="res-item">
+                        <div class="res-item-val">${attempted}</div>
+                        <div class="res-item-lbl">Attempted</div>
+                    </div>
+                    <div class="res-item">
+                        <div class="res-item-val" style="color:var(--primary)">${accuracy}%</div>
+                        <div class="res-item-lbl">Accuracy</div>
+                    </div>
+                </div>
+                <div class="res-actions">
+                    <button class="res-btn primary" onclick="location.reload()"><i class="fas fa-redo"></i> Retake Test</button>
+                </div>
+            `;
+            $('resultsScreen').classList.add('open');
+        }
+    </script>
+</body>
+</html>
